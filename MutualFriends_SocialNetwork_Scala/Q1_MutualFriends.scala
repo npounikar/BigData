@@ -1,0 +1,7 @@
+val friendsList = sc.textFile("hdfs://cshadoop1/socNetData/networkdata").cache()
+val pair = friendsList.map(line=>line.split("\\t")).filter(line => (line.size == 2)).map(line=>(line(0),line(1).split(","))).flatMap(x=>x._2.flatMap(z=>Array((x._1.toInt,z.toInt))))
+val selfJoin = pair.join(pair)
+val allFriends = selfJoin.map(elem => elem._2).filter(elem => elem._1 != elem._2)
+val mutual = allFriends.subtract(pair)
+mutual.collect()
+System.exit(0)

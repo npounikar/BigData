@@ -1,0 +1,11 @@
+val userA = readLine("Enter first User(id)  : ")
+val userB = readLine("Enter second User(id) : ")
+val inputUserIds = sc.textFile("hdfs://cshadoop1/socNetData/networkdata")
+val friendA = inputUserIds.map(li=>li.split("\\t")).filter(l1 => (l1.size == 2)).filter(li=>(userB==li(0))).flatMap(li=>li(1).split(","))
+val friendB = inputUserIds.map(li=>li.split("\\t")).filter(l1 => (l1.size == 2)).filter(li=>(userA==li(0))).flatMap(li=>li(1).split(","))
+val Details = friendB.intersection(friendA).collect()
+val inputUserDetails = sc.textFile("userdata.txt")
+val userDetails = inputUserDetails.map(li=>li.split(",")).filter(li=>Details.contains(li(0))).map(li=>(li(1)+":"+li(9)))
+val output = userA+" "+userB+"\t["+userDetails.collect.mkString(",")+"]"
+print(output)
+System.exit(0)
